@@ -71,7 +71,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: inputs.publish
+          push: ${{ inputs.publish }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
