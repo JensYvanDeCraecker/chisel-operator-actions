@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: ${{ inputs.publish && 'write' || 'none' }}
+      packages: write
       # This is used to complete the identity challenge
       # with sigstore/fulcio when running outside of PRs.
-      id-token: ${{ inputs.publish && 'write' || 'none' }}
+      id-token: write
 
     steps:
       - name: Checkout repository
