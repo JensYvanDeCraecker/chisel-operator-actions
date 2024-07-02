@@ -74,8 +74,8 @@ jobs:
     container: ${{ fromJSON(inputs.test-container) }}
     steps:
       - name: Run pre script
-        run: ${{ inputs.test-runs-on }}
-        if: ${{ inputs.test.runs-on != '' }}
+        run: ${{ inputs.test-pre }}
+        if: ${{ inputs.test-pre != '' }}
 
       - name: Checkout code
         uses: actions/checkout@v4
