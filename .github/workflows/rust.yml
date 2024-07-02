@@ -2,6 +2,27 @@ name: Rust
 
 on:
   workflow_call:
+    inputs:
+      test-runs-on:
+        description: "The runner type which the test job runs on"
+        required: false
+        default: ubuntu-latest
+        type: string
+      test-container:
+        description: "The container configuration for the test job, in JSON"
+        required: false
+        default: "null"
+        type: string
+      test-pre:
+        description: "Command to run before tests are executed, useful for installing system deps"
+        required: false
+        default: ""
+        type: string
+      test-cargo-flags:
+        description: "Additional flags to pass to cargo commands in the test step, useful for specifying features"
+        required: false
+        default: ""
+        type: string
 
 env:
   CARGO_TERM_COLOR: always
@@ -49,8 +70,13 @@ jobs:
           wait-for-processing: true
   test:
     if: (github.event_name != 'pull_request' && ! github.event.pull_request.head.repo.fork) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork)
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.test-runs-on }}
+    container: ${{ fromJSON(inputs.test-container) }}
     steps:
+      - name: Run pre script
+        run: ${{ inputs.test-runs-on }}
+        if: ${{ inputs.test.runs-on != '' }}
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -58,7 +84,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Build
-        run: cargo build --verbose
+        run: cargo build --verbose ${{ inputs.test-cargo-flags }}
 
       - name: Run tests
-        run: cargo test --verbose
+        run: cargo test --verbose ${{ inputs.test-cargo-flags }}
