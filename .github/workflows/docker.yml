@@ -3,6 +3,10 @@ name: Docker
 on:
   workflow_call:
     inputs:
+      platform:
+        description: Platform to run on
+        required: true
+        type: string
       publish:
         description: 'Whether to sign and publish the image using cosign and GHCR'
         required: true
@@ -28,7 +32,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.platform }}
     permissions:
       contents: read
       packages: write
